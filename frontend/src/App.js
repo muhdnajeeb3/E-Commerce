@@ -19,6 +19,10 @@ import AdminRoute from './components/AdminRoute';
 import ProductListScreen from './Screens/ProductListScreen';
 import ProductEditScreen from './Screens/ProductEditScreen';
 import OrderListScreen from './Screens/OrderListScreen';
+import SearchBox from './components/SearchBox';
+import SearchScreen from './Screens/SearchScreen';
+import { useEffect } from 'react';
+import { listProductCategories } from './actions/action';
 
 
 
@@ -31,6 +35,9 @@ function App() {
     const signoutHandler = () =>{
         dispatch(signout());
     }
+    useEffect(() => {
+      dispatch(listProductCategories());
+    },[dispatch]);
   return (
     <BrowserRouter>
     <div className="grid-container">
@@ -38,6 +45,13 @@ function App() {
                 <div>
                     <Link className="brand" to="/">amazona</Link>
                 </div>
+                <div>
+            <Route
+              render={({ history }) => (
+                <SearchBox history={history}></SearchBox>
+              )}
+            ></Route>
+          </div>
                 <div>
                     <Link to="/cart">cart
                     {cartItems.length > 0 && (
@@ -97,8 +111,23 @@ function App() {
                 <Route path='/placeorder' component={PlaceOrderScreen}></Route>
                 <Route path='/order/:id' component={OrderScreen}></Route>
                 <Route path='/orderhistory' component={OrderHistoryScreen}></Route>
+                <Route
+            path="/search/name/:name?"
+            component={SearchScreen}
+            exact
+          ></Route>
+          <Route
+            path="/search/category/:category"
+            component={SearchScreen}
+            exact
+          ></Route>
+          <Route
+            path="/search/category/:category/name/:name"
+            component={SearchScreen}
+            exact
+          ></Route>
                 <PrivateRoute path='/profile' component={ProfileScreen} ></PrivateRoute>
-                <AdminRoute path='/productlist' component={ProductListScreen} ></AdminRoute>
+                <AdminRoute path='/productlist' component={ProductListScreen} exact ></AdminRoute>
                 <AdminRoute
             path="/orderlist"
             component={OrderListScreen}
